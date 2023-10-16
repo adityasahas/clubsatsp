@@ -9,8 +9,15 @@ module.exports = {
     './node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}'
   ],
   theme: {
-    extend: {},
-  },
+    extend: {
+      fontFamily: {
+        sans: ['var(--font-mona)']
+      }
+  
+    }  },
   darkMode: "class",
-  plugins: [nextui()],
-}
+  plugins: [
+    nextui({
+      addCommonColors: true,
+    }),
+  ],}
