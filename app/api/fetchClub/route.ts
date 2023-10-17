@@ -15,7 +15,11 @@ export async function GET(req: NextApiRequest, res: NextApiResponse) {
     );
     const db = client.db(process.env.MONGODB_DB);
 
-    const { searchParams } = new URL(req.url, "http://localhost:3000");
+    const protocol = req.headers['x-forwarded-proto'] || 'http';
+    const host = req.headers.host;
+    const baseURL = `${protocol}://${host}`;
+    
+    const { searchParams } = new URL(req.url as string, baseURL);
     const clubURL = searchParams.get("club");
     console.log(clubURL);
     const club = await db.collection("clubs").findOne({ clubURL });
