@@ -129,7 +129,7 @@ const ClubCards: React.FC = () => {
                   }}
                 />
 
-                <AvatarGroup isBordered>
+                <AvatarGroup isBordered max={10}>
                   {club.clubOfficers.map((officer) => (
                     <Tooltip
                         key={officer.email}
@@ -147,7 +147,7 @@ const ClubCards: React.FC = () => {
                         name={`${officer.name[0]}${
                           officer.name.split(" ")[1][0]
                         }`}
-                        color={getRandomColor(availableColors)}
+                        color={getRandomColor(availableColors) || "primary"}
                       />
                     </Tooltip>
                   ))}
