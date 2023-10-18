@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Navbar as NextUINavbar,
   NavbarContent,
@@ -7,6 +9,14 @@ import {
   NavbarItem,
   NavbarMenuItem,
 } from "@nextui-org/navbar";
+import {
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  useDisclosure,
+} from "@nextui-org/react";
 import { Button } from "@nextui-org/button";
 import { Kbd } from "@nextui-org/kbd";
 import { Link } from "@nextui-org/link";
@@ -30,8 +40,22 @@ import {
 import { Logo } from "@/components/icons";
 
 export const Navbar = () => {
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+
+  const searchButton = (
+    <Button
+      aria-label="Open search"
+      onPress={onOpen}
+      className="flex items-center gap-2"
+    >
+      <SearchIcon className="text-base text-default-400" />
+      <p className="text-sm">search for a club</p>
+    </Button>
+  );
+
   const searchInput = (
     <Input
+      size="lg"
       aria-label="Search"
       classNames={{
         inputWrapper: "bg-default-100",
@@ -65,16 +89,31 @@ export const Navbar = () => {
         className="hidden sm:flex basis-1/5 sm:basis-full"
         justify="end"
       >
-		      <ThemeSwitch />
+        <ThemeSwitch />
 
-        <NavbarItem className="hidden lg:flex">{searchInput}</NavbarItem>
+        <NavbarItem className="hidden lg:flex">{searchButton}</NavbarItem>
       </NavbarContent>
 
-      <NavbarContent className="sm:hidden basis-1" >
-	  <ThemeSwitch />
+      <NavbarContent className="sm:hidden basis-1">
+        <ThemeSwitch />
 
-        <NavbarItem className=" lg:flex">{searchInput}</NavbarItem>
+        <NavbarItem className="lg:flex">{searchButton}</NavbarItem>
       </NavbarContent>
+
+      <Modal
+        backdrop="blur"
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+        className="p-4"
+      >
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalBody>{searchInput}</ModalBody>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
     </NextUINavbar>
   );
 };

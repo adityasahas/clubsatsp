@@ -139,7 +139,7 @@ const ClubCards: React.FC = () => {
                 </div>
                 <p className="text-sm sm:text-sm">{club.clubDesc}</p>
               </CardBody>
-              <div className="flex flex-col justify-between items-center px-4 py-2">
+              <div className="flex flex-col justify-between items-center px-4 py-2 mx-auto">
                 <User
                   name={club.clubAdvisor.name}
                   description={club.clubAdvisor.email}
