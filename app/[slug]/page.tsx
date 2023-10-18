@@ -12,6 +12,7 @@ import {
   User,
   Tooltip,
   Chip,
+  Snippet,
 } from "@nextui-org/react";
 import { FaChalkboardTeacher } from "react-icons/fa";
 import { motion } from "framer-motion";
@@ -107,7 +108,7 @@ export default function ClubPage({ params }: PageProps) {
 
   return (
     <motion.div
-    className="flex flex-col items-center space-y-8 p-4 sm:p-8"
+      className="flex flex-col items-center space-y-8 p-4 sm:p-8"
       variants={containerVariants}
       initial="hidden"
       animate="visible"
@@ -119,7 +120,7 @@ export default function ClubPage({ params }: PageProps) {
         <Avatar size="lg" src={club.clubImage} alt={club.clubName} />
       </motion.div>
       <div className="text-center space-y-4">
-        <p>{club.clubDesc}</p>
+        <motion.p variants={childVariants}>{club.clubDesc}</motion.p>
         <div className="flex justify-center space-x-2">
           <motion.div variants={childVariants}>
             <Chip color="primary" size="lg" variant="shadow">
@@ -137,6 +138,12 @@ export default function ClubPage({ params }: PageProps) {
             </Chip>
           </motion.div>
         </div>
+        <motion.div variants={childVariants}>
+          <h3 className="text-3xl"> Class Code </h3>
+          <Snippet className="mt-2" size="lg" color="default" symbol="">
+            {club.clubCode}
+          </Snippet>
+        </motion.div>
       </div>
       <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-8 w-full">
         <div>
@@ -165,9 +172,8 @@ export default function ClubPage({ params }: PageProps) {
           </motion.h2>
           <div className="flex flex-col items-start space-y-4">
             {club.clubOfficers.map((officer) => (
-              <motion.div variants={childVariants}>
+              <motion.div key={officer.name} variants={childVariants}>
                 <User
-                  key={officer.name}
                   name={officer.name}
                   description={officer.position}
                   avatarProps={{
