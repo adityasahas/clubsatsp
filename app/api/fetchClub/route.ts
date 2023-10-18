@@ -1,7 +1,9 @@
+// @ts-nocheck
+
 import { MongoClient } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 
-export async function GET(req: NextApiRequest, res: NextApiResponse) {
+export async function GET(req, res) {
   console.log("Query:", req.query);
 
   if (req.method !== "GET") {
