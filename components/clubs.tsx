@@ -60,7 +60,20 @@ const ClubCards: React.FC = () => {
     | "warning"
     | "danger"
   )[] = ["primary", "secondary", "success", "warning", "danger"];
+  const [maxAvatars, setMaxAvatars] = useState<number>(10);
+  useEffect(() => {
+    const updateMaxAvatars = () => {
+      setMaxAvatars(window.innerWidth <= 640 ? 3 : 10);
+    };
 
+    updateMaxAvatars();
+
+    window.addEventListener("resize", updateMaxAvatars);
+
+    return () => {
+      window.removeEventListener("resize", updateMaxAvatars);
+    };
+  }, []);
   const getRandomColor = (
     availableColors: typeof baseColors
   ): (typeof baseColors)[number] => {
@@ -96,62 +109,69 @@ const ClubCards: React.FC = () => {
       {clubs.map((club) => {
         const availableColors = [...baseColors];
         return (
-          <div className="w-full lg:w-1/2 px-2 mb-4" key={club._id}>
-            <Card className="flex flex-col h-full">
+          <div className="w-full sm:w-1/2 lg:w-1/3 px-2 mb-4" key={club._id}>
+            <Card
+              isPressable
+              onClick={() => (window.location.href = `${club.clubURL}`)}
+              className="flex flex-col h-full"
+            >
               <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
                 <Image
                   src={club.clubImage}
                   alt={club.clubName}
                   className="w-full object-cover rounded-t-lg h-32"
                 />
-                <h4 className="font-bold text-3xl mt-2">{club.clubName}</h4>
+                <h4 className="font-bold text-xl sm:text-2xl lg:text-3xl mt-2">
+                  {club.clubName}
+                </h4>
               </CardHeader>
               <CardBody className="flex-grow">
                 <div className="mb-2">
-                  <Chip className="mr-2" color="primary">
+                  <Chip className="mr-2 my-1" color="primary">
                     {club.clubRoom}
                   </Chip>
-                  <Chip className="mr-2" color="secondary">
+                  <Chip className="mr-2 my-1" color="secondary">
                     {club.clubFrequency}
                   </Chip>
-                  <Chip color="success">{club.clubDay}s</Chip>
+                  <Chip className="my-1" color="success">
+                    {club.clubDay}s
+                  </Chip>
                 </div>
-                <p className="text-sm">{club.clubDesc}</p>
+                <p className="text-sm sm:text-sm">{club.clubDesc}</p>
               </CardBody>
-              <div className="flex justify-between items-center px-4 py-2">
+              <div className="flex flex-col justify-between items-center px-4 py-2">
                 <User
                   name={club.clubAdvisor.name}
                   description={club.clubAdvisor.email}
                   avatarProps={{
-                    fallback: (
-                      <FaChalkboardTeacher className="animate-pulse w-6 h-6" />
-                    ),
+                    fallback: <FaChalkboardTeacher className=" w-6 h-6" />,
                   }}
                 />
-
-                <AvatarGroup isBordered max={10}>
-                  {club.clubOfficers.map((officer) => (
-                    <Tooltip
-                      key={officer.email}
-                      content={
-                        <div className="px-1 py-2">
-                          <div className="text-small font-bold">
-                            {officer.name}
-                          </div>
-                          <div className="text-tiny">{officer.position}</div>
-                        </div>
-                      }
-                    >
-                      <Avatar
+                <div className="mt-5 py-4">
+                  <AvatarGroup isBordered max={maxAvatars}>
+                    {club.clubOfficers.map((officer) => (
+                      <Tooltip
                         key={officer.email}
-                        name={`${officer.name[0]}${
-                          officer.name.split(" ")[1][0]
-                        }`}
-                        color={getRandomColor(availableColors) || "primary"}
-                      />
-                    </Tooltip>
-                  ))}
-                </AvatarGroup>
+                        content={
+                          <div className="px-1 py-2">
+                            <div className="text-xs font-bold">
+                              {officer.name}
+                            </div>
+                            <div className="text-xxs">{officer.position}</div>
+                          </div>
+                        }
+                      >
+                        <Avatar
+                          key={officer.email}
+                          name={`${officer.name[0]}${
+                            officer.name.split(" ")[1][0]
+                          }`}
+                          color={getRandomColor(availableColors) || "primary"}
+                        />
+                      </Tooltip>
+                    ))}
+                  </AvatarGroup>
+                </div>
               </div>
             </Card>
           </div>
@@ -160,5 +180,4 @@ const ClubCards: React.FC = () => {
     </div>
   );
 };
-
 export default ClubCards;
