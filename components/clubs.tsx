@@ -132,7 +132,7 @@ const ClubCards: React.FC = () => {
                 <AvatarGroup isBordered max={10}>
                   {club.clubOfficers.map((officer) => (
                     <Tooltip
-                        key={officer.email}
+                      key={officer.email}
                       content={
                         <div className="px-1 py-2">
                           <div className="text-small font-bold">

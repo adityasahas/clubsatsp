@@ -17,10 +17,10 @@ export async function GET(req, res) {
     );
     const db = client.db(process.env.MONGODB_DB);
 
-    const protocol = req.headers['x-forwarded-proto'] || 'http';
+    const protocol = req.headers["x-forwarded-proto"] || "http";
     const host = req.headers.host;
     const baseURL = `${protocol}://${host}`;
-    
+
     const { searchParams } = new URL(req.url as string, baseURL);
     const clubURL = searchParams.get("club");
     console.log(clubURL);
