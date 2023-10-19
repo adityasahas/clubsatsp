@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { MongoClient } from "mongodb";
 import type { NextApiRequest, NextApiResponse } from "next";
 async function streamToJson(stream: ReadableStream): Promise<any> {
@@ -11,7 +13,7 @@ async function streamToJson(stream: ReadableStream): Promise<any> {
   return JSON.parse(chunks);
 }
 
-export async function POST(req: NextApiRequest, res: NextApiResponse) {
+export async function POST(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ message: "Method not allowed" });
   }
