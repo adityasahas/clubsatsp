@@ -111,6 +111,7 @@ const ClubCards: React.FC = () => {
         return (
           <div className="w-full sm:w-1/2 lg:w-1/3 px-2 mb-4" key={club._id}>
             <Card
+              isHoverable
               isPressable
               onClick={() => (window.location.href = `${club.clubURL}`)}
               className="flex flex-col h-full"
