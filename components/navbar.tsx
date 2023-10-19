@@ -138,62 +138,63 @@ export const Navbar = () => {
 
         <NavbarItem className=" lg:flex">{searchButton}</NavbarItem>
       </NavbarContent>
-
-      <Modal
-        backdrop="blur"
-        isOpen={isOpen}
-        onOpenChange={onOpenChange}
-        className="p-4"
-        placement="auto"
-      >
-        <ModalContent>
-          {(onClose) => (
-            <>
-              <ModalBody>
-                <Input
-                  autoFocus
-                  size="lg"
-                  aria-label="Search"
-                  classNames={{
-                    inputWrapper: "bg-default-100",
-                    input: "text-sm",
-                  }}
-                  labelPlacement="outside"
-                  placeholder="search for a club"
-                  startContent={
-                    <SearchIcon className="text-base text-default-400 pointer-events-none flex-shrink-0" />
-                  }
-                  type="search"
-                  onChange={handleInputChange}
-                />
-                <FlipMove typeName="ul">
-                  {searchResults.map((club) => (
-                    <li key={club._id}>
-                      <Link href={`/${club.clubURL}`}>
-                        <Card
-                          className="flex flex-row items-center mx-auto"
-                          isPressable
-                          isHoverable
-                          isBlurred
-                        >
-                          <Image
-                            src={club.clubImage}
-                            removeWrapper
-                            className="w-auto h-20"
-                          />
-                          <CardBody>
-                            <p>{club.clubName}</p>
-                          </CardBody>
-                        </Card>
-                      </Link>
-                    </li>
-                  ))}
-                </FlipMove>
-              </ModalBody>
-            </>
-          )}
-        </ModalContent>
-      </Modal>
+      <FlipMove>
+        <Modal
+          backdrop="blur"
+          isOpen={isOpen}
+          onOpenChange={onOpenChange}
+          className="p-4"
+          placement="auto"
+        >
+          <ModalContent>
+            {(onClose) => (
+              <>
+                <ModalBody>
+                  <Input
+                    autoFocus
+                    size="lg"
+                    aria-label="Search"
+                    classNames={{
+                      inputWrapper: "bg-default-100",
+                      input: "text-sm",
+                    }}
+                    labelPlacement="outside"
+                    placeholder="search for a club"
+                    startContent={
+                      <SearchIcon className="text-base text-default-400 pointer-events-none flex-shrink-0" />
+                    }
+                    type="search"
+                    onChange={handleInputChange}
+                  />
+                  <FlipMove typeName="ul">
+                    {searchResults.map((club) => (
+                      <li key={club._id}>
+                        <Link href={`/${club.clubURL}`}>
+                          <Card
+                            className="flex flex-row items-center mx-auto"
+                            isPressable
+                            isHoverable
+                            isBlurred
+                          >
+                            <Image
+                              src={club.clubImage}
+                              removeWrapper
+                              className="w-auto h-20"
+                            />
+                            <CardBody>
+                              <p>{club.clubName}</p>
+                            </CardBody>
+                          </Card>
+                        </Link>
+                      </li>
+                    ))}
+                  </FlipMove>
+                </ModalBody>
+              </>
+            )}
+          </ModalContent>
+        </Modal>
+      </FlipMove>
     </NextUINavbar>
   );
 };
