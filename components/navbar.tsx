@@ -1,3 +1,4 @@
+// @ts-nocheck
 "use client";
 
 import {
@@ -14,13 +15,22 @@ import {
   ModalContent,
   ModalHeader,
   ModalBody,
+  Card,
+  CardBody,
+  Image,
+  CardFooter,
   ModalFooter,
+  Link,
   useDisclosure,
 } from "@nextui-org/react";
 import { Button } from "@nextui-org/button";
 import { Kbd } from "@nextui-org/kbd";
-import { Link } from "@nextui-org/link";
 import { Input } from "@nextui-org/input";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
+import FlipMove from "react-flip-move";
+
+import axios from "axios";
 
 import { link as linkStyles } from "@nextui-org/theme";
 
@@ -40,8 +50,46 @@ import {
 import { Logo } from "@/components/icons";
 
 export const Navbar = () => {
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  function debounce(func, wait) {
+    let timeout;
+    return function (...args) {
+      const context = this;
+      clearTimeout(timeout);
+      timeout = setTimeout(() => func.apply(context, args), wait);
+    };
+  }
 
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const handleInputChange = (e) => {
+    const value = e.target.value;
+    setSearchTerm(value);
+    debounce(handleSearch, 300)();
+  };
+
+  const handleSearch = async () => {
+    if (searchTerm.trim()) {
+      try {
+        const response = await axios.post(
+          "/api/search",
+          { searchTerm: searchTerm },
+          { headers: { "Content-Type": "application/json" } }
+        );
+        console.log("API Response:", response.data);
+
+        setSearchResults(response.data.clubs);
+      } catch (error) {
+        console.error("Error searching clubs:", error);
+      }
+    } else {
+      setSearchResults([]);
+    }
+  };
+
+  useEffect(() => {
+    handleSearch();
+  }, [searchTerm]);
   const searchButton = (
     <Button
       aria-label="Open search"
@@ -85,19 +133,10 @@ export const Navbar = () => {
         </NavbarBrand>
       </NavbarContent>
 
-      <NavbarContent
-        className="hidden sm:flex basis-1/5 sm:basis-full"
-        justify="end"
-      >
+      <NavbarContent className=" sm:flex basis-1/5 sm:basis-full" justify="end">
         <ThemeSwitch />
 
-        <NavbarItem className="hidden lg:flex">{searchButton}</NavbarItem>
-      </NavbarContent>
-
-      <NavbarContent className="sm:hidden basis-1">
-        <ThemeSwitch />
-
-        <NavbarItem className="lg:flex">{searchButton}</NavbarItem>
+        <NavbarItem className=" lg:flex">{searchButton}</NavbarItem>
       </NavbarContent>
 
       <Modal
@@ -105,11 +144,52 @@ export const Navbar = () => {
         isOpen={isOpen}
         onOpenChange={onOpenChange}
         className="p-4"
+        placement="auto"
       >
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalBody>{searchInput}</ModalBody>
+              <ModalBody>
+                <Input
+                  autoFocus
+                  size="lg"
+                  aria-label="Search"
+                  classNames={{
+                    inputWrapper: "bg-default-100",
+                    input: "text-sm",
+                  }}
+                  labelPlacement="outside"
+                  placeholder="search for a club"
+                  startContent={
+                    <SearchIcon className="text-base text-default-400 pointer-events-none flex-shrink-0" />
+                  }
+                  type="search"
+                  onChange={handleInputChange}
+                />
+                <FlipMove typeName="ul">
+                  {searchResults.map((club) => (
+                    <li key={club._id}>
+                      <Link href={`/${club.clubURL}`}>
+                        <Card
+                          className="flex flex-row items-center mx-auto"
+                          isPressable
+                          isHoverable
+                          isBlurred
+                        >
+                          <Image
+                            src={club.clubImage}
+                            removeWrapper
+                            className="w-auto h-20"
+                          />
+                          <CardBody>
+                            <p>{club.clubName}</p>
+                          </CardBody>
+                        </Card>
+                      </Link>
+                    </li>
+                  ))}
+                </FlipMove>
+              </ModalBody>
             </>
           )}
         </ModalContent>
